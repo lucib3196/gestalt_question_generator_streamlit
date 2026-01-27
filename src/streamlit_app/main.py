@@ -19,7 +19,6 @@ def render_ui():
         env=st.secrets["ENV"],
         thread_id=st.session_state.thread_id,
     )
-    print("Some change")
     render_select_box()
     render_chatbot_description()
 

@@ -56,7 +56,7 @@ def send_message(prompt: str):
         async for token in stream_langgraph(
             [user_message],
             thread_id,
-            st.session_state.chat_data.chat_id,
+            st.session_state.chat_data.url,
         ):
             content = token.get("content")
             if content:
