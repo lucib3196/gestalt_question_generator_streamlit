@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Dict, Literal, List
+from typing import Dict, Literal
 
 ALLOWED_MODE = Literal["text", "file"]
 

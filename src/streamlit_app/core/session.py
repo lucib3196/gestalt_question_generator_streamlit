@@ -2,7 +2,7 @@ from typing import Any, List
 from pydantic import BaseModel
 import streamlit as st
 from .config import CHAT_NAMES
-from services.llm_services import get_thread_id, initialize_thread_id
+from services.llm_services import initialize_thread_id
 
 
 class DefaultState(BaseModel):

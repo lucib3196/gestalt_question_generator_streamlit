@@ -1,6 +1,6 @@
 import streamlit as st
-from core import ENV, ChatOption, CHAT_OPTIONS
-
+from core import  ChatOption, CHAT_OPTIONS
+from type.types import ENV
 
 def render_title(
     title: str = "My Chat", env: ENV = ENV.LOCAL, thread_id: str | None = None
