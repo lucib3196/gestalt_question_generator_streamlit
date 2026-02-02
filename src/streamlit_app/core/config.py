@@ -16,24 +16,24 @@ class ChatOption(BaseModel):
 
 CHAT_OPTIONS: Dict[CHAT_NAMES, ChatOption] = {
     "gestalt_generate_module": ChatOption(
-        label="Module Generator",
+        label="Generate Full Module (One-Shot)",
         url="agent_gestalt_module",
         description=(
-            "Generate a complete, ready-to-use Gestalt module in a single pass. "
-            "This mode creates and packages all required files "
-            "(question.html, solution.html, server logic, and metadata) "
-            "from finalized input with minimal iteration."
+            "Generate an entire Gestalt module in a single automated pass. "
+            "This mode creates ALL required files at once "
+            "(question.html, solution.html, server logic, and metadata). "
+            "Best when inputs are finalized and no iteration is needed."
         ),
         active=True,
     ),
     "gestalt_build_module": ChatOption(
-        label="Module Builder",
+        label="Build Module File-by-File",
         url="agent_gestalt",
         description=(
-            "Build and refine Gestalt modules incrementally using a "
-            "file-by-file, tool-driven workflow. Ideal for "
-            "fine-grained control, iteration, and targeted generation "
-            "of question, solution, server logic, and metadata files."
+            "Build a Gestalt module incrementally with full control over "
+            "each file. This mode supports step-by-step generation, "
+            "editing, validation, and refinement of individual files "
+            "(question.html, solution.html, server logic, and metadata)."
         ),
         active=True,
     ),
@@ -41,7 +41,7 @@ CHAT_OPTIONS: Dict[CHAT_NAMES, ChatOption] = {
         label="File Upload",
         url="agent_gestalt",
         description="File Upload",
-        active=True,
+        active=False,
         mode="file",
     ),
 }
