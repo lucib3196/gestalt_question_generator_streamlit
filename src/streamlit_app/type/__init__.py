@@ -1,1 +1,1 @@
-from .types import ENV
+from .types import ENV, IMAGETYPES, PDFTYPES

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Dict, Literal
 
-ALLOWED_MODE = Literal["text", "file"]
+ALLOWED_MODE = Literal["text", "file", "both"]
 
 CHAT_NAMES = Literal["gestalt_generate_module", "file_upload", "gestalt_build_module"]
 
@@ -18,6 +18,7 @@ CHAT_OPTIONS: Dict[CHAT_NAMES, ChatOption] = {
     "gestalt_generate_module": ChatOption(
         label="Generate Full Module (One-Shot)",
         url="agent_gestalt_module",
+        mode="both",
         description=(
             "Generate an entire Gestalt module in a single automated pass. "
             "This mode creates ALL required files at once "
@@ -29,6 +30,7 @@ CHAT_OPTIONS: Dict[CHAT_NAMES, ChatOption] = {
     "gestalt_build_module": ChatOption(
         label="Build Module File-by-File",
         url="agent_gestalt",
+        mode="both",
         description=(
             "Build a Gestalt module incrementally with full control over "
             "each file. This mode supports step-by-step generation, "

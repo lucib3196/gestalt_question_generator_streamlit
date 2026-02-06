@@ -1,6 +1,7 @@
 import streamlit as st
 from core import client
 from .async_wrappers import run_async
+import base64
 
 
 async def get_thread_id():
@@ -37,14 +38,42 @@ async def stream_langgraph(messages, thread_id: str | None, assistant_id: str):
 
 
 def send_message(prompt: str):
+    image_payload = []
+    ai_message = []
+    files = st.session_state.files
     if not prompt:
         return
     st.chat_message("user").markdown(prompt)
-    user_message = {"role": "user", "content": prompt}
-    st.session_state.messages.append(user_message)
+
+    if files:
+        for _, f in files.items():
+            file_bytes = f.getvalue()
+            image_data = base64.b64encode(file_bytes).decode("utf-8")
+            mime_type = f.type
+            image_payload.append(
+                {
+                    "type": "image_url",
+                    "image_url": {"url": f"data:{mime_type};base64,{image_data}"},
+                }
+            )
+    default_message = {"role": "user", "content": prompt}
+    if len(image_payload) > 0:
+        ai_message = {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": prompt},
+                *image_payload,
+            ],
+        }
+    else:
+        ai_message = default_message
+    st.session_state.messages.append(default_message)
     assistant_box = st.chat_message("assistant")
     placeholder = assistant_box.empty()
     tool_placeholder = assistant_box.container()
+
+    # Reset files
+    files = st.session_state.files = {}
 
     async def consume():
         buffer = ""
@@ -54,7 +83,7 @@ def send_message(prompt: str):
             thread_id = st.session_state.thread_id
 
         async for token in stream_langgraph(
-            [user_message],
+            [ai_message],
             thread_id,
             st.session_state.chat_data.url,
         ):
@@ -75,5 +104,6 @@ def send_message(prompt: str):
                         ):
                             st.json(call["args"])
             st.session_state.messages.append({"role": "assistant", "content": buffer})
+
 
     run_async(consume())
