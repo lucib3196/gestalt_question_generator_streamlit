@@ -28,5 +28,6 @@ DEFAULT_STATE = DefaultState(
 
 def init_session():
     for key, value in DEFAULT_STATE.model_dump().items():
+        
         if key not in st.session_state:
             st.session_state[key] = value

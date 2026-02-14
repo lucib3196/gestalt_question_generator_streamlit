@@ -38,26 +38,30 @@ async def stream_langgraph(messages, thread_id: str | None, assistant_id: str):
 
 
 def send_message(prompt: str):
-    image_payload = []
-    ai_message = []
-    files = st.session_state.files
     if not prompt:
         return
+
     st.chat_message("user").markdown(prompt)
 
-    if files:
-        for _, f in files.items():
+    image_payload = []
+    files = st.session_state.get("files", {})
+
+    # Build image payload safely
+    if files and len(files) > 0:
+        for f in files.values():
             file_bytes = f.getvalue()
             image_data = base64.b64encode(file_bytes).decode("utf-8")
             mime_type = f.type
+
             image_payload.append(
                 {
                     "type": "image_url",
                     "image_url": {"url": f"data:{mime_type};base64,{image_data}"},
                 }
             )
-    default_message = {"role": "user", "content": prompt}
-    if len(image_payload) > 0:
+
+    # Build user message
+    if image_payload:
         ai_message = {
             "role": "user",
             "content": [
@@ -66,21 +70,25 @@ def send_message(prompt: str):
             ],
         }
     else:
-        ai_message = default_message
-    st.session_state.messages.append(default_message)
+        ai_message = {
+            "role": "user",
+            "content": prompt,
+        }
+
+    # Store clean user message in history (no base64 junk)
+    st.session_state.messages.append({"role": "user", "content": prompt})
+
     assistant_box = st.chat_message("assistant")
     placeholder = assistant_box.empty()
     tool_placeholder = assistant_box.container()
 
-    # Reset files
-    files = st.session_state.files = {}
+    # 🔥 Properly reset files AFTER building payload
+    st.session_state.files = {}
 
     async def consume():
         buffer = ""
         tool_calls_rendered = set()
-        thread_id = None
-        if "thread_id" in st.session_state:
-            thread_id = st.session_state.thread_id
+        thread_id = st.session_state.get("thread_id")
 
         async for token in stream_langgraph(
             [ai_message],
@@ -91,19 +99,24 @@ def send_message(prompt: str):
             if content:
                 buffer += content
                 placeholder.markdown(buffer)
+
             tool_calls = token.get("tool_calls")
             if tool_calls:
                 for call in tool_calls:
                     call_id = call.get("id")
                     if call_id in tool_calls_rendered:
                         continue
+
                     tool_calls_rendered.add(call_id)
+
                     with tool_placeholder:
                         with st.expander(
-                            f"Tool call: `{call['name']}`", expanded=False
+                            f"Tool call: `{call['name']}`",
+                            expanded=False,
                         ):
                             st.json(call["args"])
-            st.session_state.messages.append({"role": "assistant", "content": buffer})
 
+        # ✅ Append assistant ONCE after stream ends
+        st.session_state.messages.append({"role": "assistant", "content": buffer})
 
     run_async(consume())

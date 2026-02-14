@@ -8,9 +8,7 @@ from ui import (
 )
 import streamlit as st
 
-
 init_session()
-
 
 def render_ui():
     # Header Section
@@ -25,6 +23,5 @@ def render_ui():
     # Actual Chat Component
     render_chat()
     render_chat_input()
-
 
 render_ui()
