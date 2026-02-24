@@ -14,6 +14,10 @@ def initialize_thread_id() -> str:
         st.session_state.thread_id = thread["thread_id"]
     return st.session_state.thread_id
 
+def get_new_thread_id()->str:
+    thread = run_async(get_thread_id())
+    st.session_state.thread_id = thread["thread_id"]
+    return st.session_state.thread_id
 
 async def stream_langgraph(messages, thread_id: str | None, assistant_id: str):
     async for chunk in client.runs.stream(
