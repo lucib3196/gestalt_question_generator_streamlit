@@ -1,5 +1,5 @@
 import streamlit as st
-from core import ChatOption, CHAT_OPTIONS
+from core.config import ChatOption, CHAT_OPTIONS
 from type.types import ENV, IMAGETYPES, PDFTYPES
 from services.llm_services import get_new_thread_id
 from core.logger import logger
@@ -74,11 +74,11 @@ def render_file_uploads():
     
     if uploaded_files:
         logger.info("Current uploaded files %s", uploaded_files)
-        print("Uploaded files", uploaded_files)
-
+       
         
         for f in uploaded_files:
             if f.name not in st.session_state.files:
+    
                 st.session_state.files[f.name] = {
                     "bytes": f.getvalue(),
                     "type": f.type,

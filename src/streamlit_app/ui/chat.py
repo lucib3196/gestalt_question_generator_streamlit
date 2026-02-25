@@ -1,5 +1,5 @@
 import streamlit as st
-from services import send_message
+from services.llm_services import send_message
 
 
 def render_chat():
