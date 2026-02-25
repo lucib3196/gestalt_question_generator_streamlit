@@ -1,6 +1,6 @@
 import streamlit as st
-from core import client
-from .async_wrappers import run_async
+from core.client import client
+from services.async_wrappers import run_async
 import base64
 
 
@@ -48,14 +48,15 @@ def send_message(prompt: str):
     st.chat_message("user").markdown(prompt)
 
     image_payload = []
-    files = st.session_state.get("files", {})
+    files = st.session_state.get("files", [])
 
     # Build image payload safely
     if files and len(files) > 0:
         for f in files.values():
-            file_bytes = f.getvalue()
+            file_bytes = f.get("bytes","\b")
             image_data = base64.b64encode(file_bytes).decode("utf-8")
-            mime_type = f.type
+            mime_type = f.get("type", "png")
+            
 
             image_payload.append(
                 {

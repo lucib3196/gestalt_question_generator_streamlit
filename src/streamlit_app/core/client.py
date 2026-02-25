@@ -1,18 +1,10 @@
 from langgraph_sdk import get_client
-import streamlit as st
+from streamlit_app.core.settings import get_settings
 
-environment = st.secrets["ENV"]
-if not environment:
-    raise ValueError(f"Cannot initialize client. No environment set {environment}")
-
-if environment == "local":
-    url = st.secrets["LOCAL_URL"]
-elif environment == "production":
-    url = st.secrets["PRODUCTION_URL"]
-else:
-    raise ValueError(f"Cannot initialize client. Unknown environment set {environment}")
+settings = get_settings()
 
 try:
-    client = get_client(url=url, api_key=st.secrets["LANGSMITH_API_KEY"])
+    client = get_client(url=settings.get_agent_url, api_key=settings.langsmith_api_key)
+    assert client
 except Exception as e:
     raise ValueError(f"Cannot initialize client {e}")

@@ -1,4 +1,5 @@
-from core import init_session
+from core.session import init_session
+from core.settings import get_settings
 from ui import (
     render_title,
     render_select_box,
@@ -9,12 +10,13 @@ from ui import (
 import streamlit as st
 
 init_session()
+settings = get_settings()
 
 def render_ui():
     # Header Section
     render_title(
-        title=st.secrets["NAME"],
-        env=st.secrets["ENV"],
+        title=settings.name,
+        env=settings.env.value,
         thread_id=st.session_state.thread_id,
     )
     render_select_box()

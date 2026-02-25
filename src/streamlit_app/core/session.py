@@ -2,10 +2,11 @@ from typing import Any, List
 from pydantic import BaseModel
 import streamlit as st
 from io import BytesIO
-from .config import CHAT_NAMES
+from core.config import CHAT_NAMES
 from services.llm_services import initialize_thread_id
 from pydantic import BaseModel, ConfigDict
 from typing import Dict
+
 
 
 class DefaultState(BaseModel):
