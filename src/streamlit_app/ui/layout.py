@@ -71,9 +71,11 @@ def render_file_uploads():
         type=["jpg", "jpeg", "png"],
         key="file_uploader",
     )
-
+    
     if uploaded_files:
         logger.info("Current uploaded files %s", uploaded_files)
+        print("Uploaded files", uploaded_files)
+
         
         for f in uploaded_files:
             if f.name not in st.session_state.files:
