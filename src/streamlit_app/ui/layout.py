@@ -2,6 +2,9 @@ import streamlit as st
 from core import ChatOption, CHAT_OPTIONS
 from type.types import ENV, IMAGETYPES, PDFTYPES
 from services.llm_services import get_new_thread_id
+from core.logger import logger
+
+
 
 def render_title(
     title: str = "My Chat", env: ENV = ENV.LOCAL, thread_id: str | None = None
@@ -70,6 +73,8 @@ def render_file_uploads():
     )
 
     if uploaded_files:
+        logger.info("Current uploaded files %s", uploaded_files)
+        
         for f in uploaded_files:
             if f.name not in st.session_state.files:
                 st.session_state.files[f.name] = {
