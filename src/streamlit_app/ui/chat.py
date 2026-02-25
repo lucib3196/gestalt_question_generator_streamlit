@@ -13,3 +13,5 @@ def render_chat_input():
     prompt = st.chat_input("Type a message")
     if prompt:
         send_message(prompt)
+        if st.session_state.files:
+            st.session_state.files = {}
