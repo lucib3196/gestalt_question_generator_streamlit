@@ -17,7 +17,7 @@ class ChatOption(BaseModel):
 CHAT_OPTIONS: Dict[CHAT_NAMES, ChatOption] = {
     "gestalt_generate_module": ChatOption(
         label="Generate Full Module (One-Shot)",
-        url="agent_gestalt_module",
+        url="gestalt_question_module",
         mode="both",
         description=(
             "Generate an entire Gestalt module in a single automated pass. "
@@ -29,7 +29,7 @@ CHAT_OPTIONS: Dict[CHAT_NAMES, ChatOption] = {
     ),
     "gestalt_build_module": ChatOption(
         label="Build Module File-by-File",
-        url="agent_gestalt",
+        url="agent_simple",
         mode="both",
         description=(
             "Build a Gestalt module incrementally with full control over "
@@ -38,12 +38,5 @@ CHAT_OPTIONS: Dict[CHAT_NAMES, ChatOption] = {
             "(question.html, solution.html, server logic, and metadata)."
         ),
         active=True,
-    ),
-    "file_upload": ChatOption(
-        label="File Upload",
-        url="agent_gestalt",
-        description="File Upload",
-        active=False,
-        mode="file",
     ),
 }
